@@ -22,10 +22,10 @@ public class Expense extends Auditable{
     private String currency;
     private String description;
     private LocalDate payDate;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "pay_method_id", referencedColumnName = "id")
     private PayMethod payMethod;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private ExpenseCategory expenseCategory;
 

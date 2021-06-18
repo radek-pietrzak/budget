@@ -1,5 +1,6 @@
 package com.home.budget.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,5 +17,6 @@ public class PayMethod {
     private Long id;
     private String payMethodName;
     @OneToMany(mappedBy = "payMethod")
+    @JsonIgnore
     private List<Expense> expenses;
 }
