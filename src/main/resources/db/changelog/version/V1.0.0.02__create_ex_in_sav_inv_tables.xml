@@ -1,0 +1,174 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.7"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.7
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.7.xsd">
+
+    <changeSet id="V1.0.0.02__create_ex_in_sav_inv_tables.xml" author="Radek">
+
+        <sql>
+            CREATE TABLE IF NOT EXISTS budget.pay_methods
+            (
+            id BIGINT AUTO_INCREMENT PRIMARY KEY,
+            pay_method_name VARCHAR(64) NOT NULL
+            );
+
+            INSERT INTO budget.pay_methods (pay_method_name) VALUES ("Credit card");
+            INSERT INTO budget.pay_methods (pay_method_name) VALUES ("Cash");
+            INSERT INTO budget.pay_methods (pay_method_name) VALUES ("Transfer");
+
+            CREATE TABLE IF NOT EXISTS budget.expenses
+            (
+            id BIGINT AUTO_INCREMENT PRIMARY KEY,
+            user VARCHAR(64) NOT NULL,
+            amount DECIMAL(19, 2) NOT NULL,
+            currency VARCHAR(32) DEFAULT 'PLN' NOT NULL,
+            description VARCHAR(32) NULL,
+            pay_date DATE NULL,
+            pay_method_id BIGINT NULL,
+            category_id BIGINT NOT NULL,
+            created_user VARCHAR(255) NULL,
+            updated_user VARCHAR(255) NULL,
+            created_date TIMESTAMP NULL,
+            updated_date TIMESTAMP NULL,
+            FOREIGN KEY (pay_method_id) REFERENCES budget.pay_methods (id),
+            FOREIGN KEY (category_id) REFERENCES budget.expense_categories (id)
+            );
+
+            INSERT INTO budget.expenses
+            (user, amount, currency, description, pay_date, pay_method_id, category_id,
+            created_user, updated_user, created_date, updated_date)
+            VALUES
+            ('Radek', 15, 'PLN', 'Eggs', '2021-06-01', 2, 1,
+            'Radek', 'Radek', null, null);
+
+            INSERT INTO budget.expenses
+            (user, amount, currency, description, pay_date, pay_method_id, category_id,
+            created_user, updated_user, created_date, updated_date)
+            VALUES
+            ('Radek', 99, 'PLN', 'Shirt', '2021-06-02', 1, 7,
+            'Radek', 'Radek', null, null);
+
+            INSERT INTO budget.expenses
+            (user, amount, currency, description, pay_date, pay_method_id, category_id,
+            created_user, updated_user, created_date, updated_date)
+            VALUES
+            ('Agata', 257, 'PLN', 'Electricity', '2021-06-03', 3, 3,
+            'Agata', 'Agata', null, null);
+
+            CREATE TABLE IF NOT EXISTS budget.incomes
+            (
+            id BIGINT AUTO_INCREMENT PRIMARY KEY,
+            user VARCHAR(64) NOT NULL,
+            amount DECIMAL(19, 2) NOT NULL,
+            currency VARCHAR(32) DEFAULT 'PLN' NOT NULL,
+            description VARCHAR(32) NULL,
+            pay_date DATE NULL,
+            category_id BIGINT NOT NULL,
+            created_user VARCHAR(255) NULL,
+            updated_user VARCHAR(255) NULL,
+            created_date TIMESTAMP NULL,
+            updated_date TIMESTAMP NULL,
+            FOREIGN KEY (category_id) REFERENCES budget.income_categories (id)
+            );
+
+            INSERT INTO budget.incomes
+            (user, amount, currency, description, pay_date, category_id,
+            created_user, updated_user, created_date, updated_date)
+            VALUES
+            ('Agata', 4226, 'PLN', 'Job', '2021-06-04', 1,
+            'Agata', 'Agata', null, null);
+
+            INSERT INTO budget.incomes
+            (user, amount, currency, description, pay_date, category_id,
+            created_user, updated_user, created_date, updated_date)
+            VALUES
+            ('Radek', 3892, 'PLN', 'Job', '2021-06-05', 1,
+            'Radek', 'Radek', null, null);
+
+            INSERT INTO budget.incomes
+            (user, amount, currency, description, pay_date, category_id,
+            created_user, updated_user, created_date, updated_date)
+            VALUES
+            ('Radek', 3892, 'PLN', 'Job', '2021-06-06', 2,
+            'Radek', 'Radek', null, null);
+
+            INSERT INTO budget.incomes
+            (user, amount, currency, description, pay_date, category_id,
+            created_user, updated_user, created_date, updated_date)
+            VALUES
+            ('Agata', 56, 'PLN', 'Books', '2021-06-09', 4,
+            'Agata', 'Agata', null, null);
+
+            CREATE TABLE IF NOT EXISTS budget.investments
+            (
+            id BIGINT AUTO_INCREMENT PRIMARY KEY,
+            user VARCHAR(64) NOT NULL,
+            amount DECIMAL(19, 2) NOT NULL,
+            currency VARCHAR(32) DEFAULT 'PLN' NOT NULL,
+            description VARCHAR(32) NULL,
+            check_date DATE NULL,
+            category_id BIGINT NOT NULL,
+            created_user VARCHAR(255) NULL,
+            updated_user VARCHAR(255) NULL,
+            created_date TIMESTAMP NULL,
+            updated_date TIMESTAMP NULL,
+            FOREIGN KEY (category_id) REFERENCES budget.investment_categories (id)
+            );
+
+            INSERT INTO budget.investments
+            (user, amount, currency, description, check_date, category_id,
+            created_user, updated_user, created_date, updated_date)
+            VALUES
+            ('Radek', 12000, 'PLN', 'Garage', '2021-06-01', 1,
+            'Radek', 'Radek', null, null);
+
+            CREATE TABLE IF NOT EXISTS budget.savings
+            (
+            id BIGINT AUTO_INCREMENT PRIMARY KEY,
+            user VARCHAR(64) NOT NULL,
+            amount DECIMAL(19, 2) NOT NULL,
+            currency VARCHAR(32) DEFAULT 'PLN' NOT NULL,
+            description VARCHAR(32) NULL,
+            check_date DATE NULL,
+            category_id BIGINT NOT NULL,
+            created_user VARCHAR(255) NULL,
+            updated_user VARCHAR(255) NULL,
+            created_date TIMESTAMP NULL,
+            updated_date TIMESTAMP NULL,
+            FOREIGN KEY (category_id) REFERENCES budget.saving_categories (id)
+            );
+
+            INSERT INTO budget.savings
+            (user, amount, currency, description, check_date, category_id,
+            created_user, updated_user, created_date, updated_date)
+            VALUES
+            ('Radek', 5892, 'PLN', 'PLN account', '2021-06-01', 1,
+            'Radek', 'Radek', null, null);
+
+            INSERT INTO budget.savings
+            (user, amount, currency, description, check_date, category_id,
+            created_user, updated_user, created_date, updated_date)
+            VALUES
+            ('Radek', 11632, 'PLN', 'PLN savings', '2021-06-01', 2,
+            'Radek', 'Radek', null, null);
+
+            INSERT INTO budget.savings
+            (user, amount, currency, description, check_date, category_id,
+            created_user, updated_user, created_date, updated_date)
+            VALUES
+            ('Radek', 1235.12, 'USD', 'Dollar account', '2021-06-01', 1,
+            'Radek', 'Radek', null, null);
+
+            INSERT INTO budget.savings
+            (user, amount, currency, description, check_date, category_id,
+            created_user, updated_user, created_date, updated_date)
+            VALUES
+            ('Agata', 5892, 'PLN', 'PLN account', '2021-06-01', 1,
+            'Agata', 'Agata', null, null);
+
+
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
