@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -20,4 +19,8 @@ public class ExpenseCategory {
     @OneToMany(mappedBy = "expenseCategory")
     @JsonIgnore
     private List<Expense> expenses;
+
+    public ExpenseCategory(String categoryName) {
+        this.categoryName = categoryName;
+    }
 }

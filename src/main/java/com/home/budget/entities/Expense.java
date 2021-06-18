@@ -3,6 +3,7 @@ package com.home.budget.entities;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -28,5 +29,7 @@ public class Expense extends Auditable{
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private ExpenseCategory expenseCategory;
+
+
 
 }

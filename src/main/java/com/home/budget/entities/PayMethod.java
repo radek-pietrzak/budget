@@ -19,4 +19,8 @@ public class PayMethod {
     @OneToMany(mappedBy = "payMethod")
     @JsonIgnore
     private List<Expense> expenses;
+
+    public PayMethod(String payMethodName) {
+        this.payMethodName = payMethodName;
+    }
 }
