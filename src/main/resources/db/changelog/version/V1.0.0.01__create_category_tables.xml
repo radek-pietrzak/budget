@@ -1,0 +1,61 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.7"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.7
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.7.xsd">
+
+    <changeSet id="V1.0.0.01__create_category_tables.xml" author="Radek">
+
+        <sql>
+            CREATE TABLE IF NOT EXISTS budget.expense_categories
+            (
+            id BIGINT AUTO_INCREMENT PRIMARY KEY,
+            category_name VARCHAR(255) NOT NULL
+            );
+
+            CREATE TABLE IF NOT EXISTS budget.income_categories
+            (
+            id BIGINT AUTO_INCREMENT PRIMARY KEY,
+            category_name VARCHAR(255) NOT NULL
+            );
+
+            CREATE TABLE IF NOT EXISTS budget.saving_categories
+            (
+            id BIGINT AUTO_INCREMENT PRIMARY KEY,
+            category_name VARCHAR(255) NOT NULL
+            );
+
+            CREATE TABLE IF NOT EXISTS budget.investment_categories
+            (
+            id BIGINT AUTO_INCREMENT PRIMARY KEY,
+            category_name VARCHAR(255) NOT NULL
+            );
+
+            INSERT INTO budget.expense_categories (category_name) VALUES ("Food at home");
+            INSERT INTO budget.expense_categories (category_name) VALUES ("Food away from home");
+            INSERT INTO budget.expense_categories (category_name) VALUES ("Taxes");
+            INSERT INTO budget.expense_categories (category_name) VALUES ("Automobile");
+            INSERT INTO budget.expense_categories (category_name) VALUES ("Transportation");
+            INSERT INTO budget.expense_categories (category_name) VALUES ("Entertainment");
+            INSERT INTO budget.expense_categories (category_name) VALUES ("Clothing");
+            INSERT INTO budget.expense_categories (category_name) VALUES ("Insurance");
+            INSERT INTO budget.expense_categories (category_name) VALUES ("Medical/Dental");
+            INSERT INTO budget.expense_categories (category_name) VALUES ("School/Childcare");
+            INSERT INTO budget.expense_categories (category_name) VALUES ("Other");
+
+            INSERT INTO budget.income_categories (category_name) VALUES ("Salary");
+            INSERT INTO budget.income_categories (category_name) VALUES ("Investments");
+            INSERT INTO budget.income_categories (category_name) VALUES ("Rental");
+            INSERT INTO budget.income_categories (category_name) VALUES ("Sale");
+            INSERT INTO budget.income_categories (category_name) VALUES ("Other");
+
+            INSERT INTO budget.saving_categories (category_name) VALUES ("Budget account");
+            INSERT INTO budget.saving_categories (category_name) VALUES ("Savings account");
+
+            INSERT INTO budget.investment_categories (category_name) VALUES ("Property");
+
+
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
