@@ -1,6 +1,5 @@
 package com.home.budget.controllers;
 
-import com.home.budget.connectors.API;
 import com.home.budget.connectors.ExpenseApi;
 import com.home.budget.entities.Expense;
 import com.home.budget.entities.ExpenseCategory;
@@ -24,12 +23,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Optional;
 
 @RestController
 @RequestMapping
 @AllArgsConstructor
-@Api
+@Api(tags = "Expense Controller")
 public class ExpenseController implements ExpenseApi {
 
     private final ExpenseRepository expenseRepository;
@@ -39,7 +41,7 @@ public class ExpenseController implements ExpenseApi {
 
     @Transactional
     @Override
-    public ResponseEntity<HttpStatus> editExpense(PostPutExpenseRequest request) {
+    public ResponseEntity<HttpStatus> editExpense(@Valid PostPutExpenseRequest request) {
         ExpenseModification expense = request.getExpense();
 
         String payMethodName = expense.getPayMethodName();
@@ -81,19 +83,19 @@ public class ExpenseController implements ExpenseApi {
                 .orElseThrow();
 
         Expense expenseBuild = Expense.builder()
-                .id(expense.getId())
+                .id(Long.valueOf(expense.getId()))
                 .user(expense.getUser())
-                .amount(expense.getAmount())
+                .amount(BigDecimal.valueOf(Long.parseLong(expense.getAmount())))
                 .currency(expense.getCurrency())
                 .description(expense.getDescription())
-                .payDate(expense.getPayDate())
+                .payDate(LocalDate.parse(expense.getPayDate()))
                 .payMethod(payMethodFromRepo)
                 .expenseCategory(expenseCategoryFromRepo)
                 .build();
 
         expenseRepository.save(expenseBuild);
 
-        return ResponseEntity.accepted().build();
+        return ResponseEntity.ok(HttpStatus.ACCEPTED);
     }
 
     @Override
