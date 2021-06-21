@@ -1,16 +1,16 @@
 package com.home.budget.entities;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @EqualsAndHashCode(callSuper = true)
+@Builder
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
 @Table(name = "expenses")
 public class Expense extends Auditable{

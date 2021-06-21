@@ -6,10 +6,12 @@ import com.home.budget.entities.Expense;
 import com.home.budget.entities.ExpenseCategory;
 import com.home.budget.entities.PayMethod;
 import com.home.budget.mappers.ExpenseMapperImpl;
+import com.home.budget.modifications.ExpenseModification;
 import com.home.budget.repositories.ExpenseCategoryRepository;
 import com.home.budget.repositories.ExpenseRepository;
 import com.home.budget.repositories.PayMethodRepository;
 import com.home.budget.requests.GetExpenseRequest;
+import com.home.budget.requests.PostPutExpenseRequest;
 import com.home.budget.responses.GetExpenseResponse;
 import com.home.budget.sort.ExpenseSort;
 import io.swagger.annotations.Api;
@@ -37,12 +39,14 @@ public class ExpenseController implements ExpenseApi {
 
     @Transactional
     @Override
-    public ResponseEntity<HttpStatus> editExpense(@RequestBody Expense expense) {
-        String payMethodName = expense.getPayMethod().getPayMethodName();
+    public ResponseEntity<HttpStatus> editExpense(PostPutExpenseRequest request) {
+        ExpenseModification expense = request.getExpense();
+
+        String payMethodName = expense.getPayMethodName();
 
         PayMethod payMethod = payMethodRepository.findAll()
                 .stream()
-                .filter(name -> name.getPayMethodName().equals(payMethodName))
+                .filter(method -> method.getPayMethodName().equals(payMethodName))
                 .findFirst()
                 .orElse(null);
 
@@ -57,7 +61,7 @@ public class ExpenseController implements ExpenseApi {
                 .findFirst()
                 .orElseThrow();
 
-        String categoryName = expense.getExpenseCategory().getCategoryName();
+        String categoryName = expense.getCategoryName();
 
         ExpenseCategory expenseCategory = expenseCategoryRepository.findAll()
                 .stream()
@@ -76,9 +80,18 @@ public class ExpenseController implements ExpenseApi {
                 .findFirst()
                 .orElseThrow();
 
-        expense.setPayMethod(payMethodFromRepo);
-        expense.setExpenseCategory(expenseCategoryFromRepo);
-        expenseRepository.save(expense);
+        Expense expenseBuild = Expense.builder()
+                .id(expense.getId())
+                .user(expense.getUser())
+                .amount(expense.getAmount())
+                .currency(expense.getCurrency())
+                .description(expense.getDescription())
+                .payDate(expense.getPayDate())
+                .payMethod(payMethodFromRepo)
+                .expenseCategory(expenseCategoryFromRepo)
+                .build();
+
+        expenseRepository.save(expenseBuild);
 
         return ResponseEntity.accepted().build();
     }
