@@ -1,6 +1,7 @@
 package com.home.budget.controllers;
 
 import com.home.budget.connectors.API;
+import com.home.budget.connectors.ExpenseApi;
 import com.home.budget.entities.Expense;
 import com.home.budget.entities.ExpenseCategory;
 import com.home.budget.entities.PayMethod;
@@ -16,6 +17,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +28,7 @@ import java.util.Optional;
 @RequestMapping
 @AllArgsConstructor
 @Api
-public class ExpenseController {
+public class ExpenseController implements ExpenseApi {
 
     private final ExpenseRepository expenseRepository;
     private final ExpenseCategoryRepository expenseCategoryRepository;
@@ -34,8 +36,8 @@ public class ExpenseController {
     private final ExpenseMapperImpl expenseMapper;
 
     @Transactional
-    @RequestMapping(path = API.EXPENSES, method = {RequestMethod.POST, RequestMethod.PUT})
-    public ResponseEntity<?> addExpense(@RequestBody Expense expense) {
+    @Override
+    public ResponseEntity<HttpStatus> editExpense(@RequestBody Expense expense) {
         String payMethodName = expense.getPayMethod().getPayMethodName();
 
         PayMethod payMethod = payMethodRepository.findAll()
@@ -81,7 +83,7 @@ public class ExpenseController {
         return ResponseEntity.accepted().build();
     }
 
-    @GetMapping(path = API.EXPENSES)
+    @Override
     public GetExpenseResponse getExpenses(GetExpenseRequest request) {
         final Sort orders = new ExpenseSort(request.getSearchSortCriteria()).orders();
         final PageRequest pageRequest = PageRequest.of(request.getPage().getNumber(), request.getPage().getSize(), orders);
@@ -93,13 +95,13 @@ public class ExpenseController {
                 .build();
     }
 
-    @GetMapping(path = API.EXPENSES_ID)
+    @Override
     public ResponseEntity<?> getExpense(@PathVariable String id) {
         Optional<Expense> expense = expenseRepository.findById(Long.valueOf(id));
         return ResponseEntity.ok(expense);
     }
 
-    @DeleteMapping(path = API.EXPENSES_ID)
+    @Override
     public ResponseEntity<?> deleteExpense(@PathVariable String id) {
         expenseRepository.deleteById(Long.valueOf(id));
         return ResponseEntity.accepted().build();
