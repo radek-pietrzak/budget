@@ -1,18 +1,25 @@
 package com.home.budget.controllers;
 
+import com.home.budget.connectors.API;
 import com.home.budget.entities.Expense;
 import com.home.budget.entities.ExpenseCategory;
 import com.home.budget.entities.PayMethod;
+import com.home.budget.mappers.ExpenseMapperImpl;
 import com.home.budget.repositories.ExpenseCategoryRepository;
 import com.home.budget.repositories.ExpenseRepository;
 import com.home.budget.repositories.PayMethodRepository;
+import com.home.budget.requests.GetExpenseRequest;
+import com.home.budget.responses.GetExpenseResponse;
+import com.home.budget.sort.ExpenseSort;
 import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -24,6 +31,7 @@ public class ExpenseController {
     private final ExpenseRepository expenseRepository;
     private final ExpenseCategoryRepository expenseCategoryRepository;
     private final PayMethodRepository payMethodRepository;
+    private final ExpenseMapperImpl expenseMapper;
 
     @Transactional
     @RequestMapping(path = API.EXPENSES, method = {RequestMethod.POST, RequestMethod.PUT})
@@ -74,8 +82,15 @@ public class ExpenseController {
     }
 
     @GetMapping(path = API.EXPENSES)
-    public ResponseEntity<List<Expense>> getExpenses() {
-        return ResponseEntity.ok(expenseRepository.findAll());
+    public GetExpenseResponse getExpenses(GetExpenseRequest request) {
+        final Sort orders = new ExpenseSort(request.getSearchSortCriteria()).orders();
+        final PageRequest pageRequest = PageRequest.of(request.getPage().getNumber(), request.getPage().getSize(), orders);
+        final Page<Expense> expensePage = expenseRepository.findAll(pageRequest);
+        return GetExpenseResponse.builder()
+                .expenses(expensePage.map(expenseMapper::mapExpenseToEntity).toList())
+                .totalPages(expensePage.getTotalPages())
+                .hasNextPage(expensePage.hasNext())
+                .build();
     }
 
     @GetMapping(path = API.EXPENSES_ID)
