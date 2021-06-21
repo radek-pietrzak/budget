@@ -25,9 +25,9 @@ public class ExpenseController {
     private final ExpenseCategoryRepository expenseCategoryRepository;
     private final PayMethodRepository payMethodRepository;
 
-    @PostMapping(path = API.EXPENSES)
+    @Transactional
+    @RequestMapping(path = API.EXPENSES, method = {RequestMethod.POST, RequestMethod.PUT})
     public ResponseEntity<?> addExpense(@RequestBody Expense expense) {
-        String categoryName = expense.getExpenseCategory().getCategoryName();
         String payMethodName = expense.getPayMethod().getPayMethodName();
 
         PayMethod payMethod = payMethodRepository.findAll()
@@ -41,6 +41,14 @@ public class ExpenseController {
             payMethodRepository.save(payMethod);
         }
 
+        PayMethod payMethodFromRepo = payMethodRepository.findAll()
+                .stream()
+                .filter(name -> name.getPayMethodName().equals(payMethodName))
+                .findFirst()
+                .orElseThrow();
+
+        String categoryName = expense.getExpenseCategory().getCategoryName();
+
         ExpenseCategory expenseCategory = expenseCategoryRepository.findAll()
                 .stream()
                 .filter(name -> name.getCategoryName().equals(categoryName))
@@ -52,8 +60,14 @@ public class ExpenseController {
             expenseCategoryRepository.save(expenseCategory);
         }
 
-        expense.setExpenseCategory(expenseCategory);
-        expense.setPayMethod(payMethod);
+        ExpenseCategory expenseCategoryFromRepo = expenseCategoryRepository.findAll()
+                .stream()
+                .filter(name -> name.getCategoryName().equals(categoryName))
+                .findFirst()
+                .orElseThrow();
+
+        expense.setPayMethod(payMethodFromRepo);
+        expense.setExpenseCategory(expenseCategoryFromRepo);
         expenseRepository.save(expense);
 
         return ResponseEntity.accepted().build();
@@ -68,22 +82,6 @@ public class ExpenseController {
     public ResponseEntity<?> getExpense(@PathVariable String id) {
         Optional<Expense> expense = expenseRepository.findById(Long.valueOf(id));
         return ResponseEntity.ok(expense);
-    }
-
-    @Transactional
-    @PutMapping(path = API.EXPENSES)
-    public ResponseEntity<?> updateExpense(@RequestBody Expense expense) {
-        String categoryName = expense.getExpenseCategory().getCategoryName();
-
-        ExpenseCategory expenseCategory = expenseCategoryRepository.findAll()
-                .stream()
-                .filter(name -> name.getCategoryName().equals(categoryName))
-                .findFirst()
-                .orElse(new ExpenseCategory(categoryName));
-
-        expenseCategoryRepository.save(expenseCategory);
-        expenseRepository.saveAndFlush(expense);
-        return ResponseEntity.accepted().build();
     }
 
     @DeleteMapping(path = API.EXPENSES_ID)
