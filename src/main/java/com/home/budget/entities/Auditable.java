@@ -9,18 +9,33 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Getter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public abstract class Auditable {
     @CreatedBy
-    private String createdUser;
+    protected String createdUser;
     @LastModifiedBy
-    private String updatedUser;
+    protected String updatedUser;
     @CreatedDate
-    private LocalDateTime createdDate;
+    protected LocalDateTime createdDate;
     @LastModifiedDate
-    private LocalDateTime updatedDate;
+    protected LocalDateTime updatedDate;
+
+    @PrePersist
+    private void prePersist() {
+        ZoneId zone = ZoneId.of("Europe/Warsaw");
+        createdDate = LocalDateTime.now(ZoneId.of(zone.getId()));
+    }
+
+    @PreUpdate
+    private void preUpdate() {
+        ZoneId zone = ZoneId.of("Europe/Warsaw");
+        updatedDate = LocalDateTime.now(ZoneId.of(zone.getId()));
+    }
 }
