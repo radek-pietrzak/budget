@@ -1,4 +1,4 @@
-package com.home.budget.controllers;
+package com.home.budget.connectors;
 
 public interface API {
     String EXPENSES = "/home-budget/expenses";
