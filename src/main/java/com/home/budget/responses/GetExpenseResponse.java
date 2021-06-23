@@ -2,6 +2,7 @@ package com.home.budget.responses;
 
 import com.home.budget.entities.Expense;
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,5 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @ApiModel(description = "Expenses")
 public class GetExpenseResponse extends PageableResponse{
+
+    @ApiModelProperty
     private List<Expense> expenses;
 }
