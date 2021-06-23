@@ -1,0 +1,19 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.7"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.7
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.7.xsd">
+
+    <changeSet id="V1.0.0.03__alter_table_unique_category_name.xml" author="Radek">
+
+        <sql>
+            ALTER TABLE expense_categories ADD UNIQUE(category_name);
+            ALTER TABLE income_categories ADD UNIQUE(category_name);
+            ALTER TABLE investment_categories ADD UNIQUE(category_name);
+            ALTER TABLE saving_categories ADD UNIQUE(category_name);
+            ALTER TABLE pay_methods ADD UNIQUE(pay_method_name);
+
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

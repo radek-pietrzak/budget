@@ -1,17 +1,19 @@
 package com.home.budget.entities;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @NoArgsConstructor
 @Data
 @Table(name = "expenses")
-public class Expense {
+public class Expense extends Auditable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,11 +22,12 @@ public class Expense {
     private String currency;
     private String description;
     private LocalDate payDate;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "pay_method_id", referencedColumnName = "id")
     private PayMethod payMethod;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private ExpenseCategory expenseCategory;
+
 
 }
