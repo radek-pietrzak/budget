@@ -7,6 +7,8 @@ import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 import static com.home.budget.specifications.SpecificationType.*;
@@ -42,7 +44,18 @@ public class ExpenseSpecification implements Specification<Expense> {
 
 
             return criteriaBuilder.or(predicateById, predicateByUser, predicateByDescription);
+
+        } else if (GREATER.equals(criteria.getOperation())) {
+            final LocalDate date = LocalDate.parse(criteria.getValue(), DateTimeFormatter.ISO_DATE);
+
+            return criteriaBuilder.greaterThanOrEqualTo(root.get(criteria.getKey()), date);
+
+        } else if (LESS.equals(criteria.getOperation())) {
+            final LocalDate date = LocalDate.parse(criteria.getValue(), DateTimeFormatter.ISO_DATE);
+
+            return criteriaBuilder.lessThanOrEqualTo(root.get(criteria.getKey()), date);
         }
+
         return null;
 
     }
