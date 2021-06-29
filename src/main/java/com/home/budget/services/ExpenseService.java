@@ -18,15 +18,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.NoSuchElementException;
 
 @Service
 @AllArgsConstructor
@@ -39,6 +35,11 @@ public class ExpenseService {
 
     @Transactional
     public void editExpense(PostPutExpenseRequest request) {
+
+        if (request.getExpense().getId() == null) {
+            request.getExpense().setId("0");
+        }
+
         ExpenseModification expense = request.getExpense();
 
         String payMethodName = expense.getPayMethodName();

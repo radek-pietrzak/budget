@@ -7,10 +7,7 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.EntityListeners;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
@@ -22,6 +19,7 @@ public abstract class Auditable {
     protected String createdUser;
     @LastModifiedBy
     protected String updatedUser;
+    @Column(nullable = false, updatable = false)
     @CreatedDate
     protected LocalDateTime createdDate;
     @LastModifiedDate
