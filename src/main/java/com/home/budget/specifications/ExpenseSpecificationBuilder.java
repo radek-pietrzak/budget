@@ -23,9 +23,8 @@ public class ExpenseSpecificationBuilder {
                 .collect(Collectors.toList());
 
         Specification<Expense> result = Specification.where(null);
-        for (int i = 0; i < specifications.size(); i++) {
-            final SearchSpecCriteria searchSpecCriteria = criteria.get(i);
-            result = result.and(specifications.get(i));
+        for (ExpenseSpecification specification : specifications) {
+            result = result.and(specification);
         }
 
         return result;
