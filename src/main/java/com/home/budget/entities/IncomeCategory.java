@@ -1,5 +1,6 @@
 package com.home.budget.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,5 +17,10 @@ public class IncomeCategory {
     private Long id;
     private String categoryName;
     @OneToMany(mappedBy = "incomeCategory")
+    @JsonIgnore
     private List<Income> incomes;
+
+    public IncomeCategory(String categoryName) {
+        this.categoryName = categoryName;
+    }
 }

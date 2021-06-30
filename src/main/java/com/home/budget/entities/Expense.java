@@ -13,7 +13,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@EntityListeners(AuditingEntityListener.class)
 @Table(name = "expenses")
 public class Expense extends Auditable {
     @Id

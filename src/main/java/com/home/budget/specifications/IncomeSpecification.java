@@ -1,12 +1,11 @@
 package com.home.budget.specifications;
 
-import com.home.budget.entities.Expense;
+import com.home.budget.entities.Income;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -14,13 +13,13 @@ import java.util.Locale;
 import static com.home.budget.specifications.SpecificationType.*;
 
 @RequiredArgsConstructor
-public class ExpenseSpecification implements Specification<Expense> {
+public class IncomeSpecification implements Specification<Income> {
 
     private final SearchSpecCriteria criteria;
 
     @Override
     public Predicate toPredicate(
-            final @NonNull Root<Expense> root,
+            final @NonNull Root<Income> root,
             final @NonNull CriteriaQuery<?> query,
             final @NonNull CriteriaBuilder criteriaBuilder
     ) {
