@@ -1,5 +1,6 @@
 package com.home.budget.sort;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +15,8 @@ import javax.validation.constraints.Size;
 public class SearchSortCriteria {
 
     @Size(max = 64)
+    @ApiModelProperty(example = "id")
     private String key;
+    @ApiModelProperty(example = "ASC")
     private SortType operation;
 }

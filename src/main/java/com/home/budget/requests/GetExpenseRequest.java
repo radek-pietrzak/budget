@@ -1,7 +1,7 @@
 package com.home.budget.requests;
 
 import com.home.budget.sort.SearchSortCriteria;
-import com.home.budget.spec.SearchSpecCriteria;
+import com.home.budget.specifications.SearchSpecCriteria;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;

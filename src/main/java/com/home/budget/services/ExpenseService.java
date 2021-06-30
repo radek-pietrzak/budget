@@ -12,19 +12,17 @@ import com.home.budget.requests.GetExpenseRequest;
 import com.home.budget.requests.PostPutExpenseRequest;
 import com.home.budget.responses.GetExpenseResponse;
 import com.home.budget.sort.ExpenseSort;
+import com.home.budget.specifications.ExpenseSpecificationBuilder;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.NoSuchElementException;
 
 @Service
 @AllArgsConstructor
@@ -37,6 +35,11 @@ public class ExpenseService {
 
     @Transactional
     public void editExpense(PostPutExpenseRequest request) {
+
+        if (request.getExpense().getId() == null) {
+            request.getExpense().setId("0");
+        }
+
         ExpenseModification expense = request.getExpense();
 
         String payMethodName = expense.getPayMethodName();
@@ -76,7 +79,9 @@ public class ExpenseService {
     public GetExpenseResponse getExpenses(GetExpenseRequest request) {
         final Sort orders = new ExpenseSort(request.getSearchSortCriteria()).orders();
         final PageRequest pageRequest = PageRequest.of(request.getPage().getNumber(), request.getPage().getSize(), orders);
-        final Page<Expense> expensePage = expenseRepository.findAll(pageRequest);
+        final Specification<Expense> specifications = new ExpenseSpecificationBuilder(request.getSearchSpecCriteria()).build();
+        final Page<Expense> expensePage = expenseRepository.findAll(specifications, pageRequest);
+
         return GetExpenseResponse.builder()
                 .expenses(expensePage.map(expenseMapper::mapExpenseToEntity).toList())
                 .totalPages(expensePage.getTotalPages())
