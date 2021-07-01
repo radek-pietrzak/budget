@@ -11,7 +11,7 @@ import com.home.budget.repositories.PayMethodRepository;
 import com.home.budget.requests.GetExpenseRequest;
 import com.home.budget.requests.PostPutExpenseRequest;
 import com.home.budget.responses.GetExpenseResponse;
-import com.home.budget.sort.ExpenseSort;
+import com.home.budget.sort.MainSort;
 import com.home.budget.specifications.ExpenseSpecificationBuilder;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -77,7 +77,7 @@ public class ExpenseService {
     }
 
     public GetExpenseResponse getExpenses(GetExpenseRequest request) {
-        final Sort orders = new ExpenseSort(request.getSearchSortCriteria()).orders();
+        final Sort orders = new MainSort(request.getSearchSortCriteria()).orders();
         final PageRequest pageRequest = PageRequest.of(request.getPage().getNumber(), request.getPage().getSize(), orders);
         final Specification<Expense> specifications = new ExpenseSpecificationBuilder(request.getSearchSpecCriteria()).build();
         final Page<Expense> expensePage = expenseRepository.findAll(specifications, pageRequest);

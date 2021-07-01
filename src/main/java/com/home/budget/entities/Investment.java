@@ -1,16 +1,16 @@
 package com.home.budget.entities;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @EqualsAndHashCode(callSuper = true)
+@Builder
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
 @Table(name = "investments")
 public class Investment extends Auditable{
@@ -22,7 +22,7 @@ public class Investment extends Auditable{
     private String currency;
     private String description;
     private LocalDate checkDate;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private InvestmentCategory investmentCategory;
 
