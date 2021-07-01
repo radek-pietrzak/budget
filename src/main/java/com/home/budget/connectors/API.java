@@ -25,5 +25,8 @@ public interface API {
     String SAVING_CATEGORIES = "/home-budget/saving-categories";
     String SAVING_CATEGORIES_ID = "/home-budget/saving-categories/{id}";
 
+    String PAY_METHODS = "/home-budget/pay-methods";
+    String PAY_METHODS_ID = "/home-budget/pay-methods/{id}";
+
 
 }
