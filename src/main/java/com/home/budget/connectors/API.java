@@ -28,5 +28,7 @@ public interface API {
     String PAY_METHODS = "/home-budget/pay-methods";
     String PAY_METHODS_ID = "/home-budget/pay-methods/{id}";
 
+    String LOGOUT = "/home-budget/logout";
+
 
 }
