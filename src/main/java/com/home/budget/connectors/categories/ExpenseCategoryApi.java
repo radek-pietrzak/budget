@@ -2,6 +2,7 @@ package com.home.budget.connectors.categories;
 
 import com.home.budget.connectors.API;
 import com.home.budget.entities.categories.ExpenseCategory;
+import com.home.budget.entities.main.Expense;
 import com.home.budget.requests.get.categories.GetExpenseCategoryRequest;
 import com.home.budget.requests.postput.categories.PostPutExpenseCategoryRequest;
 import com.home.budget.responses.categories.GetExpenseCategoryResponse;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 import java.util.Optional;
 
 public interface ExpenseCategoryApi {
@@ -26,5 +28,8 @@ public interface ExpenseCategoryApi {
 
     @DeleteMapping(path = API.EXPENSE_CATEGORIES_ID)
     ResponseEntity<HttpStatus> deleteExpenseCategory(@NotNull @PathVariable String id);
+
+    @GetMapping(path = API.EXPENSE_CATEGORIES)
+    ResponseEntity<List<ExpenseCategory>> getExpenseCategories();
 
 }

@@ -48,8 +48,8 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '2.5.2'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.5.2'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version: '2.5.2'
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '2.5.2'
-    implementation group: 'org.springframework.security', name: 'spring-security-web', version: '5.5.1'
+//    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '2.5.2'
+//    implementation group: 'org.springframework.security', name: 'spring-security-web', version: '5.5.1'
 
     // Keycloak
     implementation group: 'org.keycloak', name: 'keycloak-spring-boot-starter', version: '14.0.0'

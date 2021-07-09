@@ -14,7 +14,7 @@ import javax.validation.constraints.Size;
 @ApiModel(description = "Expense modification")
 public class ExpenseModification {
 
-    @ApiModelProperty(value = "Expense id", required = true, example = "5")
+    @ApiModelProperty(value = "Expense id", example = "5")
     @Size(max = 18)
     private String id;
 
