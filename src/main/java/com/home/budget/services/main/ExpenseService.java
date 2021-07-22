@@ -62,10 +62,15 @@ public class ExpenseService {
                 .findFirst()
                 .orElseThrow();
 
+        if(expense.getAmount().contains(",")){
+            String amount = expense.getAmount().replace(',', '.');
+            expense.setAmount(amount);
+        }
+
         Expense expenseBuild = Expense.builder()
                 .id(Long.valueOf(expense.getId()))
                 .user(expense.getUser())
-                .amount(BigDecimal.valueOf(Long.parseLong(expense.getAmount())))
+                .amount(BigDecimal.valueOf(Float.parseFloat(expense.getAmount())))
                 .currency(expense.getCurrency())
                 .description(expense.getDescription())
                 .payDate(LocalDate.parse(expense.getPayDate()))
