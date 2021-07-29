@@ -27,31 +27,31 @@ public class InvestmentSpecification implements Specification<Investment> {
 
         if (EQUAL.equals(criteria.getOperation())) {
             final Path<Object> objectPath = root.get((criteria.getKey()));
-            return criteriaBuilder.equal(objectPath, criteria.getValue());
+            return criteriaBuilder.equal(objectPath, criteria.getContent());
 
         } else if (CONTAINS.equals(criteria.getOperation())) {
 
             final Predicate predicateById = criteriaBuilder
-                    .like(root.get("id").as(String.class), "%" + criteria.getValue() + "%");
+                    .like(root.get("id").as(String.class), "%" + criteria.getContent() + "%");
 
             final Predicate predicateByUser = criteriaBuilder
                     .like(criteriaBuilder.lower(root.get("user")),
-                            "%" + criteria.getValue().toLowerCase(Locale.ROOT) + "%");
+                            "%" + criteria.getContent().toLowerCase(Locale.ROOT) + "%");
 
             final Predicate predicateByDescription = criteriaBuilder
                     .like(criteriaBuilder.lower(root.get("description")),
-                            "%" + criteria.getValue().toLowerCase(Locale.ROOT) + "%");
+                            "%" + criteria.getContent().toLowerCase(Locale.ROOT) + "%");
 
 
             return criteriaBuilder.or(predicateById, predicateByUser, predicateByDescription);
 
         } else if (GREATER.equals(criteria.getOperation())) {
-            final LocalDate date = LocalDate.parse(criteria.getValue(), DateTimeFormatter.ISO_DATE);
+            final LocalDate date = LocalDate.parse(criteria.getContent(), DateTimeFormatter.ISO_DATE);
 
             return criteriaBuilder.greaterThanOrEqualTo(root.get(criteria.getKey()), date);
 
         } else if (LESS.equals(criteria.getOperation())) {
-            final LocalDate date = LocalDate.parse(criteria.getValue(), DateTimeFormatter.ISO_DATE);
+            final LocalDate date = LocalDate.parse(criteria.getContent(), DateTimeFormatter.ISO_DATE);
 
             return criteriaBuilder.lessThanOrEqualTo(root.get(criteria.getKey()), date);
         }
