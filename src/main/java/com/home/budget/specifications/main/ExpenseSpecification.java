@@ -1,5 +1,6 @@
 package com.home.budget.specifications.main;
 
+import com.home.budget.entities.categories.ExpenseCategory;
 import com.home.budget.entities.main.Expense;
 import com.home.budget.specifications.SearchSpecCriteria;
 import lombok.NonNull;
@@ -26,25 +27,42 @@ public class ExpenseSpecification implements Specification<Expense> {
             final @NonNull CriteriaBuilder criteriaBuilder
     ) {
 
+        Join<Expense, ExpenseCategory> expCatJoinRoot = root.join("expenseCategory", JoinType.LEFT);
+        Join<Expense, ExpenseCategory> payMethJoinRoot = root.join("payMethod", JoinType.LEFT);
+
         if (EQUAL.equals(criteria.getOperation())) {
             final Path<Object> objectPath = root.get((criteria.getKey()));
             return criteriaBuilder.equal(objectPath, criteria.getContent());
 
         } else if (CONTAINS.equals(criteria.getOperation())) {
 
-            final Predicate predicateById = criteriaBuilder
-                    .like(root.get("id").as(String.class), "%" + criteria.getContent() + "%");
-
             final Predicate predicateByUser = criteriaBuilder
                     .like(criteriaBuilder.lower(root.get("user")),
                             "%" + criteria.getContent().toLowerCase(Locale.ROOT) + "%");
+
+            final Predicate predicateByCurrency = criteriaBuilder
+                    .like(criteriaBuilder.lower(root.get("currency")),
+                            "%" + criteria.getContent().toLowerCase(Locale.ROOT) + "%");
+
 
             final Predicate predicateByDescription = criteriaBuilder
                     .like(criteriaBuilder.lower(root.get("description")),
                             "%" + criteria.getContent().toLowerCase(Locale.ROOT) + "%");
 
+            final Predicate predicateByCategory = criteriaBuilder
+                    .like(criteriaBuilder.lower(expCatJoinRoot.get("categoryName")),
+                            "%" + criteria.getContent().toLowerCase(Locale.ROOT) + "%");
 
-            return criteriaBuilder.or(predicateById, predicateByUser, predicateByDescription);
+            final Predicate predicateByPayMethod = criteriaBuilder
+                    .like(criteriaBuilder.lower(payMethJoinRoot.get("payMethodName")),
+                            "%" + criteria.getContent().toLowerCase(Locale.ROOT) + "%");
+
+
+            return criteriaBuilder.or(predicateByUser,
+                    predicateByCurrency,
+                    predicateByDescription,
+                    predicateByCategory,
+                    predicateByPayMethod);
 
         } else if (GREATER.equals(criteria.getOperation())) {
             final LocalDate date = LocalDate.parse(criteria.getContent(), DateTimeFormatter.ISO_DATE);

@@ -123,11 +123,10 @@ public class ExpenseService {
     }
 
     public ExpenseResponse getExpenseResponse(String id) {
-        ExpenseResponse expenseResponse = new ExpenseResponse();
         Optional<Expense> expenseOpt = expenseRepository.findById(Long.valueOf(id));
         Expense expense = expenseOpt.orElseThrow();
 
-            expenseResponse = expenseMapper.mapExpenseToEntity(expense);
+        ExpenseResponse expenseResponse = expenseMapper.mapExpenseToEntity(expense);
 
         return expenseResponse;
     }
