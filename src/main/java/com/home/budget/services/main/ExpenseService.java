@@ -10,6 +10,7 @@ import com.home.budget.repositories.main.ExpenseRepository;
 import com.home.budget.repositories.categories.PayMethodRepository;
 import com.home.budget.requests.get.main.GetExpenseRequest;
 import com.home.budget.requests.postput.main.PostPutExpenseRequest;
+import com.home.budget.responses.ExpenseResponse;
 import com.home.budget.responses.main.GetExpenseResponse;
 import com.home.budget.sort.MainSort;
 import com.home.budget.specifications.builders.main.ExpenseSpecificationBuilder;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -42,7 +44,7 @@ public class ExpenseService {
 
         ExpenseModification expense = request.getExpense();
 
-        String payMethodName = expense.getPayMethodName();
+        String payMethodName = expense.getPayMethod();
 
         savePayMethodIfNew(payMethodName);
 
@@ -52,7 +54,7 @@ public class ExpenseService {
                 .findFirst()
                 .orElseThrow();
 
-        String categoryName = expense.getCategoryName();
+        String categoryName = expense.getExpenseCategory();
 
         saveExpenseCategoryIfNew(categoryName);
 
@@ -62,7 +64,7 @@ public class ExpenseService {
                 .findFirst()
                 .orElseThrow();
 
-        if(expense.getAmount().contains(",")){
+        if (expense.getAmount().contains(",")) {
             String amount = expense.getAmount().replace(',', '.');
             expense.setAmount(amount);
         }
@@ -118,5 +120,15 @@ public class ExpenseService {
             expenseCategory = new ExpenseCategory(categoryName);
             expenseCategoryRepository.save(expenseCategory);
         }
+    }
+
+    public ExpenseResponse getExpenseResponse(String id) {
+        ExpenseResponse expenseResponse = new ExpenseResponse();
+        Optional<Expense> expenseOpt = expenseRepository.findById(Long.valueOf(id));
+        Expense expense = expenseOpt.orElseThrow();
+
+            expenseResponse = expenseMapper.mapExpenseToEntity(expense);
+
+        return expenseResponse;
     }
 }

@@ -4,6 +4,7 @@ import com.home.budget.connectors.API;
 import com.home.budget.entities.main.Expense;
 import com.home.budget.requests.get.main.GetExpenseRequest;
 import com.home.budget.requests.postput.main.PostPutExpenseRequest;
+import com.home.budget.responses.ExpenseResponse;
 import com.home.budget.responses.main.GetExpenseResponse;
 import org.keycloak.authorization.client.util.Http;
 import org.springframework.http.HttpStatus;
@@ -25,7 +26,7 @@ public interface ExpenseApi {
     ResponseEntity<GetExpenseResponse> getExpenses(@Valid @RequestBody GetExpenseRequest request);
 
     @GetMapping(path = API.EXPENSES_ID)
-    ResponseEntity<Optional<Expense>> getExpense(@NotNull @PathVariable String id);
+    ResponseEntity<ExpenseResponse> getExpense(@NotNull @PathVariable String id);
 
     @DeleteMapping(path = API.EXPENSES_ID)
     ResponseEntity<HttpStatus> deleteExpense(@NotNull @PathVariable String id);
