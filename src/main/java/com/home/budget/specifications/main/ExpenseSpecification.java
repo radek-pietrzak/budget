@@ -34,7 +34,7 @@ public class ExpenseSpecification implements Specification<Expense> {
             final Path<Object> objectPath = root.get((criteria.getKey()));
             return criteriaBuilder.equal(objectPath, criteria.getContent());
 
-        } else if (CONTAINS.equals(criteria.getOperation())) {
+        } else if (CONTAINS.equals(criteria.getOperation()) && null != criteria.getContent()) {
 
             final Predicate predicateByUser = criteriaBuilder
                     .like(criteriaBuilder.lower(root.get("user")),
@@ -64,15 +64,25 @@ public class ExpenseSpecification implements Specification<Expense> {
                     predicateByCategory,
                     predicateByPayMethod);
 
-        } else if (GREATER.equals(criteria.getOperation())) {
+        } else if (GREATER.equals(criteria.getOperation()) && "payDate".equals(criteria.getKey()) && null != criteria.getContent()) {
             final LocalDate date = LocalDate.parse(criteria.getContent(), DateTimeFormatter.ISO_DATE);
 
             return criteriaBuilder.greaterThanOrEqualTo(root.get(criteria.getKey()), date);
 
-        } else if (LESS.equals(criteria.getOperation())) {
+        } else if (LESS.equals(criteria.getOperation()) && "payDate".equals(criteria.getKey()) && null != criteria.getContent()) {
             final LocalDate date = LocalDate.parse(criteria.getContent(), DateTimeFormatter.ISO_DATE);
 
             return criteriaBuilder.lessThanOrEqualTo(root.get(criteria.getKey()), date);
+
+        } else if (GREATER.equals(criteria.getOperation()) && "amount".equals(criteria.getKey()) && null != criteria.getContent()) {
+            final Double amount = Double.valueOf(criteria.getContent());
+
+            return criteriaBuilder.greaterThanOrEqualTo(root.get(criteria.getKey()), amount);
+
+        } else if (LESS.equals(criteria.getOperation()) && "amount".equals(criteria.getKey()) && null != criteria.getContent()) {
+            final Double amount = Double.valueOf(criteria.getContent());
+
+            return criteriaBuilder.lessThanOrEqualTo(root.get(criteria.getKey()), amount);
         }
 
         return null;
