@@ -22,6 +22,5 @@ import java.util.List;
 public class GetExpenseResponse extends PageableResponse {
 
     @ApiModelProperty
-//    private List<Expense> expenses;
     private List<ExpenseResponse> expenses;
 }

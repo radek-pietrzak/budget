@@ -13,6 +13,8 @@ import com.home.budget.requests.postput.main.PostPutExpenseRequest;
 import com.home.budget.responses.ExpenseResponse;
 import com.home.budget.responses.main.GetExpenseResponse;
 import com.home.budget.sort.MainSort;
+import com.home.budget.specifications.SearchSpecCriteria;
+import com.home.budget.specifications.SpecificationType;
 import com.home.budget.specifications.builders.main.ExpenseSpecificationBuilder;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,6 +26,8 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -84,6 +88,9 @@ public class ExpenseService {
     }
 
     public GetExpenseResponse getExpenses(GetExpenseRequest request) {
+
+        LocalDate date = LocalDate.now();
+        addMonthSpecCriteria(request, date);
         final Sort orders = new MainSort(request.getSearchSortCriteria()).orders();
         final PageRequest pageRequest = PageRequest.of(request.getPage().getNumber(), request.getPage().getSize(), orders);
         final Specification<Expense> specifications = new ExpenseSpecificationBuilder(request.getSearchSpecCriteria()).build();
@@ -93,7 +100,40 @@ public class ExpenseService {
                 .expenses(expensePage.map(expenseMapper::mapExpenseToEntity).toList())
                 .totalPages(expensePage.getTotalPages())
                 .hasNextPage(expensePage.hasNext())
+                .date(date)
                 .build();
+    }
+
+    private void addMonthSpecCriteria(GetExpenseRequest request, LocalDate date) {
+        SearchSpecCriteria monthBeginCriteria = new SearchSpecCriteria("payDate", SpecificationType.GREATER, getDateWithFirstDayOfMonth(date));
+        SearchSpecCriteria monthEndCriteria = new SearchSpecCriteria("payDate", SpecificationType.LESS, getDateWithLastDayOfMonth(date));
+        if (null == request.getSearchSpecCriteria()) {
+            List<SearchSpecCriteria> criteriaList = new ArrayList<>();
+            request.setSearchSpecCriteria(criteriaList);
+        }
+        request.getSearchSpecCriteria().add(monthBeginCriteria);
+        request.getSearchSpecCriteria().add(monthEndCriteria);
+    }
+
+
+    private String getDateWithLastDayOfMonth(LocalDate date) {
+        int month = date.getMonthValue();
+        while (month == date.getMonthValue()) {
+            date = date.plusDays(1);
+        }
+        date = date.minusDays(1);
+
+        return date.toString();
+    }
+
+    private String getDateWithFirstDayOfMonth(LocalDate date) {
+        int month = date.getMonthValue();
+        while (month == date.getMonthValue()) {
+            date = date.minusDays(1);
+        }
+        date = date.plusDays(1);
+
+        return date.toString();
     }
 
     private void savePayMethodIfNew(String payMethodName) {
@@ -126,8 +166,6 @@ public class ExpenseService {
         Optional<Expense> expenseOpt = expenseRepository.findById(Long.valueOf(id));
         Expense expense = expenseOpt.orElseThrow();
 
-        ExpenseResponse expenseResponse = expenseMapper.mapExpenseToEntity(expense);
-
-        return expenseResponse;
+        return expenseMapper.mapExpenseToEntity(expense);
     }
 }
