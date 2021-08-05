@@ -89,7 +89,7 @@ public class ExpenseService {
 
     public GetExpenseResponse getExpenses(GetExpenseRequest request) {
 
-        LocalDate date = LocalDate.now();
+        LocalDate date = LocalDate.now().plusMonths(request.getMonth());
         addMonthSpecCriteria(request, date);
         final Sort orders = new MainSort(request.getSearchSortCriteria()).orders();
         final PageRequest pageRequest = PageRequest.of(request.getPage().getNumber(), request.getPage().getSize(), orders);

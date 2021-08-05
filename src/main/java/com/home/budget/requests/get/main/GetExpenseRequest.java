@@ -19,6 +19,7 @@ import java.util.List;
 @SuperBuilder
 @ApiModel(description = "Get expenses")
 public class GetExpenseRequest extends PageableRequest {
+    private int month;
     private List<SearchSpecCriteria> searchSpecCriteria;
     private List<SearchSortCriteria> searchSortCriteria;
 }
