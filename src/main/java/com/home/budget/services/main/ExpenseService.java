@@ -88,9 +88,12 @@ public class ExpenseService {
     }
 
     public GetExpenseResponse getExpenses(GetExpenseRequest request) {
+        LocalDate currentDate = LocalDate.now();
+        if(null == request.getRequestedDate()){
+            request.setRequestedDate(currentDate);
+        }
+        addMonthSpecCriteria(request, currentDate);
 
-        LocalDate date = LocalDate.now().plusMonths(request.getMonth());
-        addMonthSpecCriteria(request, date);
         final Sort orders = new MainSort(request.getSearchSortCriteria()).orders();
         final PageRequest pageRequest = PageRequest.of(request.getPage().getNumber(), request.getPage().getSize(), orders);
         final Specification<Expense> specifications = new ExpenseSpecificationBuilder(request.getSearchSpecCriteria()).build();
@@ -100,13 +103,18 @@ public class ExpenseService {
                 .expenses(expensePage.map(expenseMapper::mapExpenseToEntity).toList())
                 .totalPages(expensePage.getTotalPages())
                 .hasNextPage(expensePage.hasNext())
-                .date(date)
+                .currentDate(currentDate)
+                .requestedDate(request.getRequestedDate())
                 .build();
     }
 
     private void addMonthSpecCriteria(GetExpenseRequest request, LocalDate date) {
-        SearchSpecCriteria monthBeginCriteria = new SearchSpecCriteria("payDate", SpecificationType.GREATER, getDateWithFirstDayOfMonth(date));
-        SearchSpecCriteria monthEndCriteria = new SearchSpecCriteria("payDate", SpecificationType.LESS, getDateWithLastDayOfMonth(date));
+        if(null == request.getRequestedDate()){
+            request.setRequestedDate(date);
+        }
+
+        SearchSpecCriteria monthBeginCriteria = new SearchSpecCriteria("payDate", SpecificationType.GREATER, getDateWithFirstDayOfMonth(request.getRequestedDate()));
+        SearchSpecCriteria monthEndCriteria = new SearchSpecCriteria("payDate", SpecificationType.LESS, getDateWithLastDayOfMonth(request.getRequestedDate()));
         if (null == request.getSearchSpecCriteria()) {
             List<SearchSpecCriteria> criteriaList = new ArrayList<>();
             request.setSearchSpecCriteria(criteriaList);

@@ -23,6 +23,8 @@ public abstract class PageableResponse {
     @NotNull
     private Integer totalPages;
     @NotNull
-    private LocalDate date;
+    private LocalDate currentDate;
+    @NotNull
+    private LocalDate requestedDate;
 
 }

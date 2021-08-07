@@ -10,6 +10,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -19,7 +20,7 @@ import java.util.List;
 @SuperBuilder
 @ApiModel(description = "Get expenses")
 public class GetExpenseRequest extends PageableRequest {
-    private int month;
+    private LocalDate requestedDate;
     private List<SearchSpecCriteria> searchSpecCriteria;
     private List<SearchSortCriteria> searchSortCriteria;
 }
