@@ -88,7 +88,7 @@ public class ExpenseService {
     }
 
     public GetExpenseResponse getExpenses(GetExpenseRequest request) {
-        LocalDate currentDate = LocalDate.now();
+        String currentDate = LocalDate.now().toString();
         if(null == request.getRequestedDate()){
             request.setRequestedDate(currentDate);
         }
@@ -108,7 +108,7 @@ public class ExpenseService {
                 .build();
     }
 
-    private void addMonthSpecCriteria(GetExpenseRequest request, LocalDate date) {
+    private void addMonthSpecCriteria(GetExpenseRequest request, String date) {
         if(null == request.getRequestedDate()){
             request.setRequestedDate(date);
         }
@@ -124,24 +124,26 @@ public class ExpenseService {
     }
 
 
-    private String getDateWithLastDayOfMonth(LocalDate date) {
-        int month = date.getMonthValue();
-        while (month == date.getMonthValue()) {
-            date = date.plusDays(1);
+    private String getDateWithLastDayOfMonth(String date) {
+        LocalDate parsedDate = LocalDate.parse(date);
+        int month = parsedDate.getMonthValue();
+        while (month == parsedDate.getMonthValue()) {
+            parsedDate = parsedDate.plusDays(1);
         }
-        date = date.minusDays(1);
+        parsedDate = parsedDate.minusDays(1);
 
-        return date.toString();
+        return parsedDate.toString();
     }
 
-    private String getDateWithFirstDayOfMonth(LocalDate date) {
-        int month = date.getMonthValue();
-        while (month == date.getMonthValue()) {
-            date = date.minusDays(1);
+    private String getDateWithFirstDayOfMonth(String date) {
+        LocalDate parsedDate = LocalDate.parse(date);
+        int month = parsedDate.getMonthValue();
+        while (month == parsedDate.getMonthValue()) {
+            parsedDate = parsedDate.minusDays(1);
         }
-        date = date.plusDays(1);
+        parsedDate = parsedDate.plusDays(1);
 
-        return date.toString();
+        return parsedDate.toString();
     }
 
     private void savePayMethodIfNew(String payMethodName) {

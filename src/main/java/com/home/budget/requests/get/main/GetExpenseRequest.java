@@ -20,7 +20,7 @@ import java.util.List;
 @SuperBuilder
 @ApiModel(description = "Get expenses")
 public class GetExpenseRequest extends PageableRequest {
-    private LocalDate requestedDate;
+    private String requestedDate;
     private List<SearchSpecCriteria> searchSpecCriteria;
     private List<SearchSortCriteria> searchSortCriteria;
 }
