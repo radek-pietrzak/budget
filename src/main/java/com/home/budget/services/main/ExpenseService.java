@@ -89,9 +89,11 @@ public class ExpenseService {
 
     public GetExpenseResponse getExpenses(GetExpenseRequest request) {
         String currentDate = LocalDate.now().toString();
-        if(null == request.getRequestedDate()){
-            request.setRequestedDate(currentDate);
+
+        if (null == request.getRequestedDate()) {
+            request.setRequestedDate(getDateWithLastDayOfMonth(currentDate));
         }
+
         addMonthSpecCriteria(request, currentDate);
 
         final Sort orders = new MainSort(request.getSearchSortCriteria()).orders();
@@ -104,12 +106,12 @@ public class ExpenseService {
                 .totalPages(expensePage.getTotalPages())
                 .hasNextPage(expensePage.hasNext())
                 .currentDate(currentDate)
-                .requestedDate(request.getRequestedDate())
+                .requestedDate(getDateWithLastDayOfMonth(request.getRequestedDate()))
                 .build();
     }
 
     private void addMonthSpecCriteria(GetExpenseRequest request, String date) {
-        if(null == request.getRequestedDate()){
+        if (null == request.getRequestedDate()) {
             request.setRequestedDate(date);
         }
 
