@@ -13,6 +13,7 @@ import com.home.budget.requests.postput.main.PostPutExpenseRequest;
 import com.home.budget.responses.ExpenseResponse;
 import com.home.budget.responses.main.GetExpenseResponse;
 import com.home.budget.sort.MainSort;
+import com.home.budget.sort.SearchSortCriteria;
 import com.home.budget.specifications.SearchSpecCriteria;
 import com.home.budget.specifications.SpecificationType;
 import com.home.budget.specifications.builders.main.ExpenseSpecificationBuilder;
@@ -88,6 +89,19 @@ public class ExpenseService {
     }
 
     public GetExpenseResponse getExpenses(GetExpenseRequest request) {
+        if (null == request) {
+            request = new GetExpenseRequest();
+        }
+        if (null == request.getPage() || null == request.getPage().getNumber()) {
+            com.home.budget.requests.Page page = new com.home.budget.requests.Page(10, 0);
+            request.setPage(page);
+        }
+
+        if (null == request.getSearchSortCriteria()) {
+            List<SearchSortCriteria> sortCriteriaList = new ArrayList<>();
+            request.setSearchSortCriteria(sortCriteriaList);
+        }
+
         String currentDate = LocalDate.now().toString();
 
         if (null == request.getRequestedDate()) {
