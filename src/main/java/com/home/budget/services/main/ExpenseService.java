@@ -115,12 +115,18 @@ public class ExpenseService {
         final Specification<Expense> specifications = new ExpenseSpecificationBuilder(request.getSearchSpecCriteria()).build();
         final Page<Expense> expensePage = expenseRepository.findAll(specifications, pageRequest);
 
+        final com.home.budget.requests.Page page = new com.home.budget.requests.Page();
+        page.setNumber(pageRequest.getPageNumber());
+        page.setSize(pageRequest.getPageSize());
+
+
         return GetExpenseResponse.builder()
                 .expenses(expensePage.map(expenseMapper::mapExpenseToEntity).toList())
                 .totalPages(expensePage.getTotalPages())
                 .hasNextPage(expensePage.hasNext())
                 .currentDate(currentDate)
                 .requestedDate(getDateWithLastDayOfMonth(request.getRequestedDate()))
+                .page(page)
                 .build();
     }
 
