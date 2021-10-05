@@ -10,7 +10,7 @@ import static java.util.stream.Collectors.toList;
 
 @RequiredArgsConstructor
 public class MainSort {
-    private static final String DEFAULT_SORT_COLUMN = "payDate";
+    private static final String DEFAULT_SORT_COLUMN = "id";
     private final List<SearchSortCriteria> searchSortCriteria;
 
     public Sort orders() {
