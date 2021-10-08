@@ -8,5 +8,6 @@
     <include file="db/changelog/version/V1.0.0.01__create_category_tables.xml"/>
     <include file="db/changelog/version/V1.0.0.02__create_ex_in_sav_inv_tables.xml"/>
     <include file="db/changelog/version/V1.0.0.03__alter_table_unique_category_name.xml"/>
+    <include file="db/changelog/version/V1.0.0.04__insert_into_fill_db.xml"/>
 
 </databaseChangeLog>

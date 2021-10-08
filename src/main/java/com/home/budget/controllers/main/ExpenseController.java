@@ -5,6 +5,7 @@ import com.home.budget.entities.main.Expense;
 import com.home.budget.repositories.main.ExpenseRepository;
 import com.home.budget.requests.get.main.GetExpenseRequest;
 import com.home.budget.requests.postput.main.PostPutExpenseRequest;
+import com.home.budget.responses.ExpenseResponse;
 import com.home.budget.responses.main.GetExpenseResponse;
 import com.home.budget.services.main.ExpenseService;
 import io.swagger.annotations.Api;
@@ -15,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -40,9 +40,9 @@ public class ExpenseController implements ExpenseApi {
     }
 
     @Override
-    public ResponseEntity<Optional<Expense>> getExpense(String id) {
-        Optional<Expense> expense = expenseRepository.findById(Long.valueOf(id));
-        return ResponseEntity.ok(expense);
+    public ResponseEntity<ExpenseResponse> getExpense(String id) {
+        ExpenseResponse expenseResponse = expenseService.getExpenseResponse(id);
+        return ResponseEntity.ok(expenseResponse);
     }
 
     @Override

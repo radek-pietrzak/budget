@@ -45,10 +45,10 @@ public class ExpenseModification {
     @ApiModelProperty(value = "Pay Method", required = true, example = "Some method")
     @Size(max = 32)
     @NotBlank
-    private String payMethodName;
+    private String payMethod;
 
     @ApiModelProperty(value = "Expense Category", required = true, example = "Some category")
     @Size(max = 64)
     @NotBlank
-    private String categoryName;
+    private String expenseCategory;
 }

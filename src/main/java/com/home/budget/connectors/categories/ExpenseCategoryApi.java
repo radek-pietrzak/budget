@@ -15,6 +15,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin(origins = "http://localhost:4200")
 public interface ExpenseCategoryApi {
 
     @PutMapping(path = API.EXPENSE_CATEGORIES)

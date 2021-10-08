@@ -10,25 +10,30 @@ import static java.util.stream.Collectors.toList;
 
 @RequiredArgsConstructor
 public class MainSort {
-    private static final String DEFAULT_SORT_COLUMN = "payDate";
+    private static final String DEFAULT_SORT_COLUMN = "id";
     private final List<SearchSortCriteria> searchSortCriteria;
 
-    public org.springframework.data.domain.Sort orders() {
+    public Sort orders() {
+        Sort defaultSort = Sort.by(Sort.Direction.DESC, DEFAULT_SORT_COLUMN);
+        Sort.Order defaultOrder = new Sort.Order(Sort.Direction.DESC, DEFAULT_SORT_COLUMN, Sort.NullHandling.NULLS_FIRST);
+
         if (CollectionUtils.isEmpty(searchSortCriteria)) {
-            return org.springframework.data.domain.Sort.by(Sort.Direction.DESC, DEFAULT_SORT_COLUMN);
+            return defaultSort;
         }
-        final List<org.springframework.data.domain.Sort.Order> orders = searchSortCriteria.stream()
+        final List<Sort.Order> orders = searchSortCriteria.stream()
                 .map(item -> sortByKey(item.getOperation(), item.getKey()))
                 .collect(toList());
 
-        return org.springframework.data.domain.Sort.by(orders);
+        orders.add(defaultOrder);
+
+        return Sort.by(orders);
     }
 
-    private org.springframework.data.domain.Sort.Order sortByKey(final SortType operation, final String sort) {
+    private Sort.Order sortByKey(final SortType operation, final String key) {
         if (SortType.ASC.equals(operation)) {
-            return new org.springframework.data.domain.Sort.Order(Sort.Direction.ASC, sort, org.springframework.data.domain.Sort.NullHandling.NULLS_LAST);
+            return new Sort.Order(Sort.Direction.ASC, key, Sort.NullHandling.NULLS_LAST);
         } else {
-            return new org.springframework.data.domain.Sort.Order(Sort.Direction.DESC, sort, org.springframework.data.domain.Sort.NullHandling.NULLS_FIRST);
+            return new Sort.Order(Sort.Direction.DESC, key, Sort.NullHandling.NULLS_FIRST);
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.home.budget.responses.main;
 
 import com.home.budget.entities.main.Expense;
+import com.home.budget.responses.ExpenseResponse;
 import com.home.budget.responses.PageableResponse;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -21,5 +22,5 @@ import java.util.List;
 public class GetExpenseResponse extends PageableResponse {
 
     @ApiModelProperty
-    private List<Expense> expenses;
+    private List<ExpenseResponse> expenses;
 }

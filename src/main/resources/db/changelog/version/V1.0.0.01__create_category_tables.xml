@@ -31,30 +31,6 @@
             category_name VARCHAR(255) NOT NULL
             );
 
-            INSERT INTO budget.expense_categories (category_name) VALUES ("Food at home");
-            INSERT INTO budget.expense_categories (category_name) VALUES ("Food away from home");
-            INSERT INTO budget.expense_categories (category_name) VALUES ("Taxes");
-            INSERT INTO budget.expense_categories (category_name) VALUES ("Automobile");
-            INSERT INTO budget.expense_categories (category_name) VALUES ("Transportation");
-            INSERT INTO budget.expense_categories (category_name) VALUES ("Entertainment");
-            INSERT INTO budget.expense_categories (category_name) VALUES ("Clothing");
-            INSERT INTO budget.expense_categories (category_name) VALUES ("Insurance");
-            INSERT INTO budget.expense_categories (category_name) VALUES ("Medical/Dental");
-            INSERT INTO budget.expense_categories (category_name) VALUES ("School/Childcare");
-            INSERT INTO budget.expense_categories (category_name) VALUES ("Other");
-
-            INSERT INTO budget.income_categories (category_name) VALUES ("Salary");
-            INSERT INTO budget.income_categories (category_name) VALUES ("Investments");
-            INSERT INTO budget.income_categories (category_name) VALUES ("Rental");
-            INSERT INTO budget.income_categories (category_name) VALUES ("Sale");
-            INSERT INTO budget.income_categories (category_name) VALUES ("Other");
-
-            INSERT INTO budget.saving_categories (category_name) VALUES ("Budget account");
-            INSERT INTO budget.saving_categories (category_name) VALUES ("Savings account");
-
-            INSERT INTO budget.investment_categories (category_name) VALUES ("Property");
-
-
         </sql>
     </changeSet>
 

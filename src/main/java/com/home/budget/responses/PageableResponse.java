@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 
 @Data
 @SuperBuilder
@@ -21,5 +22,9 @@ public abstract class PageableResponse {
     private Boolean hasNextPage;
     @NotNull
     private Integer totalPages;
+    @NotNull
+    private String currentDate;
+    @NotNull
+    private String requestedDate;
 
 }
