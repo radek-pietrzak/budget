@@ -1,6 +1,7 @@
 package com.home.budget.sort;
 
 import lombok.*;
+import org.springframework.data.domain.Sort;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public class MainSort {
 
     public org.springframework.data.domain.Sort orders() {
         if (CollectionUtils.isEmpty(searchSortCriteria)) {
-            return org.springframework.data.domain.Sort.by(org.springframework.data.domain.Sort.Direction.ASC, DEFAULT_SORT_COLUMN);
+            return org.springframework.data.domain.Sort.by(Sort.Direction.DESC, DEFAULT_SORT_COLUMN);
         }
         final List<org.springframework.data.domain.Sort.Order> orders = searchSortCriteria.stream()
                 .map(item -> sortByKey(item.getOperation(), item.getKey()))
@@ -25,9 +26,9 @@ public class MainSort {
 
     private org.springframework.data.domain.Sort.Order sortByKey(final SortType operation, final String sort) {
         if (SortType.ASC.equals(operation)) {
-            return new org.springframework.data.domain.Sort.Order(org.springframework.data.domain.Sort.Direction.ASC, sort, org.springframework.data.domain.Sort.NullHandling.NULLS_LAST);
+            return new org.springframework.data.domain.Sort.Order(Sort.Direction.ASC, sort, org.springframework.data.domain.Sort.NullHandling.NULLS_LAST);
         } else {
-            return new org.springframework.data.domain.Sort.Order(org.springframework.data.domain.Sort.Direction.DESC, sort, org.springframework.data.domain.Sort.NullHandling.NULLS_FIRST);
+            return new org.springframework.data.domain.Sort.Order(Sort.Direction.DESC, sort, org.springframework.data.domain.Sort.NullHandling.NULLS_FIRST);
         }
     }
 }

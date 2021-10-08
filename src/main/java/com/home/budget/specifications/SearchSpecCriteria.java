@@ -20,6 +20,6 @@ public class SearchSpecCriteria {
 
     @ApiModelProperty(value = "description", example = "Some")
     @Size(max = 256)
-    private String value;
+    private String content;
 
 }

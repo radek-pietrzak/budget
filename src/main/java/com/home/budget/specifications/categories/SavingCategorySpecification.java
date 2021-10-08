@@ -26,16 +26,16 @@ public class SavingCategorySpecification implements Specification<SavingCategory
 
         if (EQUAL.equals(criteria.getOperation())) {
             final Path<Object> objectPath = root.get((criteria.getKey()));
-            return criteriaBuilder.equal(objectPath, criteria.getValue());
+            return criteriaBuilder.equal(objectPath, criteria.getContent());
 
         } else if (CONTAINS.equals(criteria.getOperation())) {
 
             final Predicate predicateById = criteriaBuilder
-                    .like(root.get("id").as(String.class), "%" + criteria.getValue() + "%");
+                    .like(root.get("id").as(String.class), "%" + criteria.getContent() + "%");
 
             final Predicate predicateByCategoryName = criteriaBuilder
                     .like(criteriaBuilder.lower(root.get("categoryName")),
-                            "%" + criteria.getValue().toLowerCase(Locale.ROOT) + "%");
+                            "%" + criteria.getContent().toLowerCase(Locale.ROOT) + "%");
 
 
             return criteriaBuilder.or(predicateById, predicateByCategoryName);
