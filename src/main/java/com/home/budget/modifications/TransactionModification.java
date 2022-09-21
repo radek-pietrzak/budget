@@ -18,10 +18,10 @@ public class TransactionModification {
     @Size(max = 18)
     private String id;
 
-    @ApiModelProperty(value = "User", required = true, example = "Radek")
+    @ApiModelProperty(value = "Contractor", required = true, example = "Radek")
     @Size(max = 32)
     @NotBlank
-    private String user;
+    private String contractor;
 
     @ApiModelProperty(value = "Amount", required = true, example = "50")
     @Size(max = 32)

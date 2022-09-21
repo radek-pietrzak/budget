@@ -1,0 +1,81 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.7"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.7
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.7.xsd">
+
+    <changeSet id="V1.0.0.05__create_transaction_tables.xml" author="Radek">
+
+        <sql>
+            CREATE TABLE IF NOT EXISTS budget.contractors
+            (
+            id              BIGINT          AUTO_INCREMENT PRIMARY KEY,
+            created_date    TIMESTAMP       NOT NULL,
+            updated_date    TIMESTAMP       NOT NULL,
+            created_user    VARCHAR(100)    NOT NULL,
+            updated_user    VARCHAR(100)    NOT NULL,
+            first_name      VARCHAR(255)    NOT NULL,
+            last_name       VARCHAR(255)    ,
+            email           VARCHAR(255)    NOT NULL
+            );
+
+            CREATE TABLE IF NOT EXISTS budget.currencies
+            (
+            id              BIGINT          AUTO_INCREMENT PRIMARY KEY,
+            created_date    TIMESTAMP       NOT NULL,
+            updated_date    TIMESTAMP       NOT NULL,
+            created_user    VARCHAR(100)    NOT NULL,
+            updated_user    VARCHAR(100)    NOT NULL,
+            name            VARCHAR(255)    ,
+            abbreviation    VARCHAR(3)      NOT NULL
+            );
+
+            CREATE TABLE IF NOT EXISTS budget.groups
+            (
+            id              BIGINT          AUTO_INCREMENT PRIMARY KEY,
+            created_date    TIMESTAMP       NOT NULL,
+            updated_date    TIMESTAMP       NOT NULL,
+            created_user    VARCHAR(100)    NOT NULL,
+            updated_user    VARCHAR(100)    NOT NULL,
+            name            VARCHAR(255)    NOT NULL
+            );
+
+            CREATE TABLE IF NOT EXISTS budget.transaction_categories
+            (
+            id              BIGINT          AUTO_INCREMENT PRIMARY KEY,
+            created_date    TIMESTAMP       NOT NULL,
+            updated_date    TIMESTAMP       NOT NULL,
+            created_user    VARCHAR(100)    NOT NULL,
+            updated_user    VARCHAR(100)    NOT NULL,
+            name            VARCHAR(255)    NOT NULL
+            );
+
+            CREATE TABLE IF NOT EXISTS budget.transactions
+            (
+            id              BIGINT          AUTO_INCREMENT PRIMARY KEY,
+            created_date    TIMESTAMP       NOT NULL,
+            updated_date    TIMESTAMP       NOT NULL,
+            created_user    VARCHAR(100)    NOT NULL,
+            updated_user    VARCHAR(100)    NOT NULL,
+            type            ENUM('EXPENSE', 'LONG_EXPENSE', 'INCOME', 'INVESTMENT', 'LOAN')
+                                            NOT NULL,
+            contractor_id   BIGINT          NOT NULL,
+            amount          DECIMAL(19,2)   NOT NULL,
+            currency_id     BIGINT          NOT NULL,
+            group_id        BIGINT          NOT NULL,
+            description     VARCHAR(100)    ,
+            category_id     BIGINT          NOT NULL,
+            pay_date        DATE            NOT NULL,
+            pay_method_id   BIGINT          NOT NULL,
+            is_removed      BOOLEAN         DEFAULT (FALSE),
+
+            FOREIGN KEY (contractor_id)     REFERENCES budget.contractors (id),
+            FOREIGN KEY (currency_id)       REFERENCES budget.currencies (id),
+            FOREIGN KEY (group_id)          REFERENCES budget.groups (id),
+            FOREIGN KEY (category_id)       REFERENCES budget.transaction_categories (id),
+            FOREIGN KEY (pay_method_id)     REFERENCES budget.pay_methods (id)
+            );
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

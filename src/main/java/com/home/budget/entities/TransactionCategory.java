@@ -15,20 +15,19 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
 @Table(name = "transaction_categories")
-public class TransactionCategory {
+public class TransactionCategory extends Auditable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String categoryName;
-    @OneToMany(mappedBy = "transactionCategory")
+    private String name;
+    @OneToMany(mappedBy = "category")
     @JsonIgnore
     @ToString.Exclude
     private List<Transaction> transactions;
 
     public TransactionCategory(String categoryName) {
-        this.categoryName = categoryName;
+        this.name = categoryName;
     }
 
     @Override

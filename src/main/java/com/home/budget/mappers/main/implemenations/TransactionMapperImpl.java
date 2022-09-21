@@ -11,13 +11,13 @@ public class TransactionMapperImpl extends TransactionMapper {
     public TransactionResponse mapTransactionToEntity(Transaction transaction) {
         TransactionResponse transactionResponse = new TransactionResponse();
         transactionResponse.setId(transaction.getId().toString());
-        transactionResponse.setUser(transaction.getUser());
+        transactionResponse.setContractor(transaction.getContractor().getEmail());
         transactionResponse.setAmount(transaction.getAmount().toString());
-        transactionResponse.setCurrency(transaction.getCurrency());
+        transactionResponse.setCurrency(transaction.getCurrency().getAbbreviation());
         transactionResponse.setDescription(transaction.getDescription());
         transactionResponse.setPayDate(transaction.getPayDate());
         transactionResponse.setPayMethod(transaction.getPayMethod().getPayMethodName());
-        transactionResponse.setTransactionCategory(transaction.getTransactionCategory().getCategoryName());
+        transactionResponse.setTransactionCategory(transaction.getCategory().getName());
         transactionResponse.setCreatedUser(transaction.getCreatedUser());
         transactionResponse.setUpdatedUser(transaction.getUpdatedUser());
         transactionResponse.setCreatedDate(transaction.getCreatedDate());

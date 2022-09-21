@@ -6,7 +6,7 @@ import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.Objects;
 
 @Builder
@@ -16,23 +16,34 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
 @Table(name = "transactions")
 public class Transaction extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String user;
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "ENUM('EXPENSE', 'LONG_EXPENSE', 'INCOME', 'INVESTMENT', 'LOAN')", nullable = false)
+    private TransactionType type;
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinColumn(name = "contractor_id", referencedColumnName = "id")
+    private Contractor contractor;
     private BigDecimal amount;
-    private String currency;
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinColumn(name = "currency_id", referencedColumnName = "id")
+    private Currency currency;
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinColumn(name = "group_id", referencedColumnName = "id")
+    private Group group;
     private String description;
-    private LocalDate payDate;
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinColumn(name = "category_id", referencedColumnName = "id")
+    private TransactionCategory category;
+    @Temporal(TemporalType.DATE)
+    private Date payDate;
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "pay_method_id", referencedColumnName = "id")
     private PayMethod payMethod;
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    @JoinColumn(name = "category_id", referencedColumnName = "id")
-    private TransactionCategory transactionCategory;
+    private boolean isRemoved;
 
     @Override
     public boolean equals(Object o) {

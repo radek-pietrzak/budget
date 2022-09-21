@@ -5,6 +5,8 @@ import com.home.budget.entities.categories.PayMethod;
 import com.home.budget.entities.Transaction;
 import com.home.budget.mappers.main.implemenations.TransactionMapperImpl;
 import com.home.budget.modifications.TransactionModification;
+import com.home.budget.repositories.ContractorRepository;
+import com.home.budget.repositories.CurrencyRepository;
 import com.home.budget.repositories.TransactionCategoryRepository;
 import com.home.budget.repositories.categories.PayMethodRepository;
 import com.home.budget.repositories.TransactionRepository;
@@ -26,7 +28,9 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +41,8 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final TransactionCategoryRepository transactionCategoryRepository;
     private final PayMethodRepository payMethodRepository;
+    private final ContractorRepository contractorRepository;
+    private final CurrencyRepository currencyRepository;
     private final TransactionMapperImpl transactionMapper;
 
     @Transactional
@@ -48,25 +54,8 @@ public class TransactionService {
 
         TransactionModification transaction = request.getTransaction();
 
-        String payMethodName = transaction.getPayMethod();
-
-        savePayMethodIfNew(payMethodName);
-
-        PayMethod payMethodFromRepo = payMethodRepository.findAll()
-                .stream()
-                .filter(name -> name.getPayMethodName().equals(payMethodName))
-                .findFirst()
-                .orElseThrow();
-
-        String categoryName = transaction.getTransactionCategory();
-
-        saveTransactionCategoryIfNew(categoryName);
-
-        TransactionCategory transactionCategoryFromRepo = transactionCategoryRepository.findAll()
-                .stream()
-                .filter(name -> name.getCategoryName().equals(categoryName))
-                .findFirst()
-                .orElseThrow();
+        savePayMethodIfNew(transaction.getPayMethod());
+        saveTransactionCategoryIfNew(transaction.getTransactionCategory());
 
         if (transaction.getAmount().contains(",")) {
             String amount = transaction.getAmount().replace(',', '.');
@@ -75,13 +64,13 @@ public class TransactionService {
 
         Transaction transactionBuild = Transaction.builder()
                 .id(Long.valueOf(transaction.getId()))
-                .user(transaction.getUser())
+                .contractor(contractorRepository.findFirstByFirstName(transaction.getContractor()))
                 .amount(BigDecimal.valueOf(Float.parseFloat(transaction.getAmount())))
-                .currency(transaction.getCurrency())
+                .currency(currencyRepository.findFirstByAbbreviation(transaction.getCurrency()))
                 .description(transaction.getDescription())
-                .payDate(LocalDate.parse(transaction.getPayDate()))
-                .payMethod(payMethodFromRepo)
-                .transactionCategory(transactionCategoryFromRepo)
+                .payDate(Date.from(LocalDate.parse(transaction.getPayDate()).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()))
+                .payMethod(payMethodRepository.findFirstByPayMethodName(transaction.getPayMethod()))
+                .category(transactionCategoryRepository.findFirstByName(transaction.getTransactionCategory()))
                 .build();
 
         transactionRepository.save(transactionBuild);
@@ -164,7 +153,7 @@ public class TransactionService {
     private void saveTransactionCategoryIfNew(String categoryName) {
         TransactionCategory transactionCategory = transactionCategoryRepository.findAll()
                 .stream()
-                .filter(name -> name.getCategoryName().equals(categoryName))
+                .filter(name -> name.getName().equals(categoryName))
                 .findFirst()
                 .orElse(null);
 

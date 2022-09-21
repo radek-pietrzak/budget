@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PayMethodRepository extends JpaRepository<PayMethod, Long>, JpaSpecificationExecutor<PayMethod> {
+
+    PayMethod findFirstByPayMethodName(String payMethodName);
 }
