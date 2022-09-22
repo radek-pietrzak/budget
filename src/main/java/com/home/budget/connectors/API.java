@@ -7,6 +7,7 @@ public interface API {
 
     String TRANSACTIONS = "/home-budget/transactions";
     String TRANSACTIONS_ID = "/home-budget/transactions/{id}";
+    String MULTI_TRANSACTIONS = "/home-budget/multi-transactions";
     String EXPENSES = "/home-budget/expenses";
     String EXPENSES_ID = "/home-budget/expenses/{id}";
 
