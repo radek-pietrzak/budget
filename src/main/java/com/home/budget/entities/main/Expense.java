@@ -4,17 +4,20 @@ import com.home.budget.entities.Auditable;
 import com.home.budget.entities.categories.ExpenseCategory;
 import com.home.budget.entities.categories.PayMethod;
 import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Objects;
 
-@EqualsAndHashCode(callSuper = true)
 @Builder
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
+@ToString
 @Table(name = "expenses")
 public class Expense extends Auditable {
     @Id
@@ -32,5 +35,16 @@ public class Expense extends Auditable {
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private ExpenseCategory expenseCategory;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Expense expense = (Expense) o;
+        return id != null && Objects.equals(id, expense.id);
+    }
 
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

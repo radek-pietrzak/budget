@@ -1,6 +1,6 @@
 package com.home.budget.entities;
 
-import lombok.Getter;
+import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -11,10 +11,15 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
+@AllArgsConstructor
 @Getter
+@Setter
+@ToString
+@NoArgsConstructor
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public abstract class Auditable {
+
     @CreatedBy
     protected String createdUser;
     @LastModifiedBy

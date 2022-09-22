@@ -25,23 +25,21 @@ public class Transaction extends Auditable {
     @Column(columnDefinition = "ENUM('EXPENSE', 'LONG_EXPENSE', 'INCOME', 'INVESTMENT', 'LOAN')", nullable = false)
     private TransactionType type;
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    @JoinColumn(name = "contractor_id", referencedColumnName = "id")
+    @JoinColumn(name = "contractor_id", referencedColumnName = "id", nullable = false)
     private Contractor contractor;
     private BigDecimal amount;
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    @JoinColumn(name = "currency_id", referencedColumnName = "id")
+    @JoinColumn(name = "currency_id", referencedColumnName = "id", nullable = false)
     private Currency currency;
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    @JoinColumn(name = "group_id", referencedColumnName = "id")
-    private Group group;
     private String description;
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    @JoinColumn(name = "category_id", referencedColumnName = "id")
+    @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
     private TransactionCategory category;
     @Temporal(TemporalType.DATE)
+    @Column(nullable = false)
     private Date payDate;
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    @JoinColumn(name = "pay_method_id", referencedColumnName = "id")
+    @JoinColumn(name = "pay_method_id", referencedColumnName = "id", nullable = false)
     private PayMethod payMethod;
     private boolean isRemoved;
 

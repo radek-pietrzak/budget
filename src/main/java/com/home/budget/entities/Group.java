@@ -19,10 +19,11 @@ public class Group extends Auditable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
     private String name;
-    @OneToMany(mappedBy = "group")
-    @JsonIgnore
-    @ToString.Exclude
-    private List<Transaction> transactions;
+//    @OneToMany(mappedBy = "group")
+//    @JsonIgnore
+//    @ToString.Exclude
+//    private List<Transaction> transactions;
 
 }

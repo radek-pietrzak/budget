@@ -17,7 +17,6 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
 @Table(name = "pay_methods")
 public class PayMethod {
     @Id

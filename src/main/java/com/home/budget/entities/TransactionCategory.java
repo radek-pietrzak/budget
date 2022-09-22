@@ -20,15 +20,12 @@ public class TransactionCategory extends Auditable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
     private String name;
     @OneToMany(mappedBy = "category")
     @JsonIgnore
     @ToString.Exclude
     private List<Transaction> transactions;
-
-    public TransactionCategory(String categoryName) {
-        this.name = categoryName;
-    }
 
     @Override
     public boolean equals(Object o) {

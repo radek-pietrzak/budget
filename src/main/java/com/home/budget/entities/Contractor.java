@@ -19,6 +19,7 @@ public class Contractor extends Auditable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
     private String firstName;
     private String lastName;
     private String email;

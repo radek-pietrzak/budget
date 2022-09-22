@@ -20,6 +20,7 @@ public class Currency extends Auditable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    @Column(nullable = false)
     private String abbreviation;
     @OneToMany(mappedBy = "currency")
     @JsonIgnore

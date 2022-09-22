@@ -1,8 +1,7 @@
 package com.home.budget.services;
 
-import com.home.budget.entities.TransactionCategory;
+import com.home.budget.entities.*;
 import com.home.budget.entities.categories.PayMethod;
-import com.home.budget.entities.Transaction;
 import com.home.budget.mappers.main.implemenations.TransactionMapperImpl;
 import com.home.budget.modifications.TransactionModification;
 import com.home.budget.repositories.ContractorRepository;
@@ -28,6 +27,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
@@ -53,9 +53,12 @@ public class TransactionService {
         }
 
         TransactionModification transaction = request.getTransaction();
+        LocalDateTime now = LocalDateTime.now(ZoneId.systemDefault());
 
+        saveContractorIfNew(transaction.getContractor());
         savePayMethodIfNew(transaction.getPayMethod());
-        saveTransactionCategoryIfNew(transaction.getTransactionCategory());
+        saveCurrencyIfNew(transaction.getCurrency());
+        saveTransactionCategoryIfNew(transaction, now);
 
         if (transaction.getAmount().contains(",")) {
             String amount = transaction.getAmount().replace(',', '.');
@@ -64,13 +67,14 @@ public class TransactionService {
 
         Transaction transactionBuild = Transaction.builder()
                 .id(Long.valueOf(transaction.getId()))
+                .type(TransactionType.getType(transaction.getType()))
                 .contractor(contractorRepository.findFirstByFirstName(transaction.getContractor()))
                 .amount(BigDecimal.valueOf(Float.parseFloat(transaction.getAmount())))
                 .currency(currencyRepository.findFirstByAbbreviation(transaction.getCurrency()))
                 .description(transaction.getDescription())
                 .payDate(Date.from(LocalDate.parse(transaction.getPayDate()).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()))
                 .payMethod(payMethodRepository.findFirstByPayMethodName(transaction.getPayMethod()))
-                .category(transactionCategoryRepository.findFirstByName(transaction.getTransactionCategory()))
+                .category(transactionCategoryRepository.findFirstByName(transaction.getCategory()))
                 .build();
 
         transactionRepository.save(transactionBuild);
@@ -137,28 +141,48 @@ public class TransactionService {
         return parsedDate.toString();
     }
 
+
+    private void saveContractorIfNew(String contractorName) {
+        Contractor contractor = contractorRepository.findFirstByFirstName(contractorName);
+
+        if (contractor == null) {
+            contractor = Contractor.builder()
+                    .firstName(contractorName)
+                    .build();
+            contractorRepository.save(contractor);
+        }
+    }
+
     private void savePayMethodIfNew(String payMethodName) {
-        PayMethod payMethod = payMethodRepository.findAll()
-                .stream()
-                .filter(method -> method.getPayMethodName().equals(payMethodName))
-                .findFirst()
-                .orElse(null);
+        PayMethod payMethod = payMethodRepository.findFirstByPayMethodName(payMethodName);
 
         if (payMethod == null) {
-            payMethod = new PayMethod(payMethodName);
+            payMethod = PayMethod.builder()
+                    .payMethodName(payMethodName)
+                    .build();
             payMethodRepository.save(payMethod);
         }
     }
 
-    private void saveTransactionCategoryIfNew(String categoryName) {
-        TransactionCategory transactionCategory = transactionCategoryRepository.findAll()
-                .stream()
-                .filter(name -> name.getName().equals(categoryName))
-                .findFirst()
-                .orElse(null);
+    private void saveCurrencyIfNew(String abbreviation) {
+        Currency currency = currencyRepository.findFirstByAbbreviation(abbreviation);
+
+        if (currency == null) {
+            currency = Currency.builder()
+                    .abbreviation(abbreviation)
+                    .build();
+            currencyRepository.save(currency);
+        }
+    }
+
+    private void saveTransactionCategoryIfNew(TransactionModification transaction, LocalDateTime now) {
+        TransactionCategory transactionCategory = transactionCategoryRepository.findFirstByName(transaction.getCategory());
 
         if (transactionCategory == null) {
-            transactionCategory = new TransactionCategory(categoryName);
+
+            transactionCategory = TransactionCategory.builder()
+                    .name(transaction.getCategory())
+                    .build();
             transactionCategoryRepository.save(transactionCategory);
         }
     }
