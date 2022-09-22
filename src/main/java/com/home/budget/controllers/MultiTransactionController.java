@@ -1,6 +1,7 @@
 package com.home.budget.controllers;
 
 import com.home.budget.connectors.MultiTransactionApi;
+import com.home.budget.modifications.TransactionModification;
 import com.home.budget.requests.postput.PostMultiTransactionRequest;
 import com.home.budget.requests.postput.PutMultiTransactionRequest;
 import com.home.budget.services.MultiTransactionService;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping
@@ -22,8 +25,8 @@ public class MultiTransactionController implements MultiTransactionApi {
     private final MultiTransactionService service;
 
     @Override
-    public ResponseEntity<HttpStatus> checkTransactions(PostMultiTransactionRequest request) {
-        return null;
+    public ResponseEntity<List<TransactionModification>> checkTransactions(PostMultiTransactionRequest request) {
+        return service.checkTransactions(request);
     }
 
     @Override
