@@ -31,6 +31,6 @@ public class MultiTransactionController implements MultiTransactionApi {
 
     @Override
     public ResponseEntity<HttpStatus> saveTransactions(PutMultiTransactionRequest request) {
-        return null;
+        return service.saveTransactions(request);
     }
 }
